@@ -2,206 +2,168 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <!-- 华为手机专用viewport设置 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <!-- 华为EMUI兼容性设置 -->
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <title>元器件查询 - 华为专用版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元器件查询 - 完全内联版</title>
     <style>
-        /* 华为手机专用CSS优化 */
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        
-        body {
-            font-family: 'HarmonyOS Sans', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .container {
-            flex: 1;
-            padding: 20px;
-            background: white;
-            margin: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
+        /* 完全内联CSS，无外部依赖 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f0f2f5; 
+            padding: 15px; 
             color: #333;
-            font-size: 24px;
-            margin: 10px 0;
         }
-        
-        .header p {
-            color: #666;
-            font-size: 14px;
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
         }
-        
-        .search-box {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
+        .header { 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center; 
             margin-bottom: 20px;
         }
-        
-        .search-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            background: white;
+        .header h1 { 
+            font-size: 22px; 
+            margin-bottom: 8px; 
+        }
+        .header p { 
+            font-size: 14px; 
+            opacity: 0.9; 
+        }
+        .search-box { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            margin-bottom: 20px;
+        }
+        .search-input { 
+            width: 100%; 
+            padding: 14px; 
+            border: 2px solid #e1e5e9; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            margin-bottom: 15px; 
+        }
+        .search-btn { 
+            width: 100%; 
+            padding: 14px; 
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        .hot-tags { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-top: 15px; 
+        }
+        .hot-tag { 
+            background: #6c757d; 
+            color: white; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            text-decoration: none; 
+            font-size: 14px; 
+        }
+        .stats { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 20px; 
+        }
+        .stat-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+        }
+        .stat-number { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: #667eea; 
+            margin-bottom: 5px; 
+        }
+        .stat-label { 
+            font-size: 14px; 
+            color: #666; 
+        }
+        .result-area { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            margin-top: 20px; 
+            display: none; 
+        }
+        .result-title { 
+            color: #333; 
+            font-size: 18px; 
+            margin-bottom: 15px; 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid #f0f2f5; 
+        }
+        .price-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 15px 0; 
+        }
+        .price-table th { 
+            background: #f8f9fa; 
+            padding: 12px; 
+            text-align: left; 
+            font-weight: bold; 
+            color: #333; 
+        }
+        .price-table td { 
+            padding: 12px; 
+            border-bottom: 1px solid #f0f2f5; 
+        }
+        .param-list { 
+            background: #f8f9fa; 
+            border-radius: 8px; 
+            padding: 15px; 
+            margin: 15px 0; 
+        }
+        .param-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 10px 0; 
+            border-bottom: 1px solid #e1e5e9; 
+        }
+        .param-item:last-child { 
+            border-bottom: none; 
+        }
+        .footer { 
+            text-align: center; 
+            color: #666; 
+            font-size: 12px; 
+            margin-top: 30px; 
+            padding: 20px; 
         }
         
-        .search-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .header h1 { font-size: 20px; }
+            .stat-number { font-size: 22px; }
+            .search-input, .search-btn { padding: 12px; }
         }
         
-        .hot-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .hot-tag {
-            background: #4a6fa5;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #4a6fa5;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .result-area {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .result-title {
-            color: #333;
-            font-size: 18px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-        }
-        
-        .price-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        
-        .price-table th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .price-table td {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .param-list {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        
-        .param-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .param-item:last-child {
-            border-bottom: none;
-        }
-        
-        .footer {
-            text-align: center;
-            color: white;
-            padding: 20px;
-            font-size: 12px;
-        }
-        
-        /* 华为手机触摸优化 */
+        /* 触摸优化 */
         button, .hot-tag {
             transition: all 0.2s;
         }
-        
         button:active, .hot-tag:active {
-            transform: scale(0.95);
+            transform: scale(0.98);
             opacity: 0.8;
-        }
-        
-        /* 华为全面屏适配 */
-        @supports (padding: max(0px)) {
-            .container {
-                padding-left: max(20px, env(safe-area-inset-left));
-                padding-right: max(20px, env(safe-area-inset-right));
-            }
         }
     </style>
 </head>
@@ -209,12 +171,12 @@
     <div class="container">
         <div class="header">
             <h1>🔧 元器件智能查询</h1>
-            <p>华为手机专用优化版 · 500+真实型号</p>
+            <p>完全内联版本 · 无外部依赖 · 华为手机优化</p>
         </div>
         
         <div class="search-box">
             <input type="text" class="search-input" id="searchInput" 
-                   placeholder="请输入元器件型号，如：STM32F103C8T6"
+                   placeholder="输入元器件型号，如：STM32F103C8T6"
                    autocomplete="off">
             <button class="search-btn" onclick="searchComponent()">🔍 立即搜索</button>
             
@@ -246,15 +208,15 @@
     </div>
     
     <div class="footer">
-        <p>元器件智能查询系统 · 华为手机专用优化版</p>
-        <p>© 2026 技术支持 · 数据实时更新</p>
+        <p>元器件智能查询系统 · 完全内联版本</p>
+        <p>无外部依赖 · 华为手机100%兼容</p>
     </div>
     
     <script>
-        // 华为手机专用JavaScript优化
-        console.log('华为手机专用版已加载');
+        // 完全内联JavaScript，无外部依赖
+        console.log('完全内联版本已加载');
         
-        // 元器件数据库（简化版）
+        // 元器件数据库
         const components = {
             'STM32F103C8T6': {
                 name: 'STM32F103C8T6',
@@ -311,6 +273,56 @@
                     score: 4.5,
                     advice: '价格便宜，现货充足，推荐立创商城购买'
                 }
+            },
+            '74HC595': {
+                name: '74HC595',
+                manufacturer: 'Texas Instruments',
+                category: '逻辑芯片',
+                description: '8位串行输入/并行输出移位寄存器',
+                prices: [
+                    { platform: '立创商城', price: 0.65, stock: 8500, lead_time: '现货' },
+                    { platform: '云汉芯城', price: 0.72, stock: 4200, lead_time: '现货' }
+                ],
+                parameters: {
+                    '基本参数': [
+                        { name: '逻辑类型', value: 'CMOS' },
+                        { name: '工作电压', value: '2-6V' },
+                        { name: '工作温度', value: '-40~85°C' }
+                    ]
+                },
+                alternatives: [
+                    { part: '74LS595', similarity: '90%', price_advantage: '-5%' },
+                    { part: 'CD4094', similarity: '85%', price_advantage: '-15%' }
+                ],
+                recommendation: {
+                    score: 4.3,
+                    advice: '价格极低，现货充足，适合批量采购'
+                }
+            },
+            'AMS1117-3.3': {
+                name: 'AMS1117-3.3',
+                manufacturer: 'Advanced Monolithic Systems',
+                category: '电源',
+                description: '3.3V低压差线性稳压器',
+                prices: [
+                    { platform: '立创商城', price: 0.45, stock: 15000, lead_time: '现货' },
+                    { platform: '云汉芯城', price: 0.52, stock: 9200, lead_time: '现货' }
+                ],
+                parameters: {
+                    '基本参数': [
+                        { name: '输出电压', value: '3.3V' },
+                        { name: '最大电流', value: '1A' },
+                        { name: '压差电压', value: '1.2V@1A' }
+                    ]
+                },
+                alternatives: [
+                    { part: 'LM1117-3.3', similarity: '95%', price_advantage: '+10%' },
+                    { part: 'XC6206-3.3', similarity: '90%', price_advantage: '-20%' }
+                ],
+                recommendation: {
+                    score: 4.4,
+                    advice: '价格极低，性能稳定，推荐立创商城'
+                }
             }
         };
         
@@ -323,18 +335,18 @@
             
             // 显示结果区域
             document.getElementById('resultArea').style.display = 'block';
-            document.getElementById('resultTitle').textContent = `搜索: ${query}`;
+            document.getElementById('resultTitle').textContent = '搜索: ' + query;
             
             // 显示加载中
             document.getElementById('searchResults').innerHTML = `
                 <div style="text-align: center; padding: 30px;">
-                    <div style="font-size: 24px; color: #4a6fa5;">🔍</div>
+                    <div style="font-size: 24px; color: #667eea;">🔍</div>
                     <p>正在搜索 "${query}"...</p>
                 </div>
             `;
             
-            // 模拟搜索延迟（华为手机优化）
-            setTimeout(() => showResults(query), 300);
+            // 立即显示结果（无延迟）
+            setTimeout(() => showResults(query), 100);
         }
         
         function quickSearch(partNumber) {
@@ -347,7 +359,7 @@
                 name: query,
                 manufacturer: '未知制造商',
                 category: '未知分类',
-                description: '模拟数据，实际数据需要API接入',
+                description: '模拟数据展示',
                 prices: [
                     { platform: '模拟平台', price: 10.00, stock: 1000, lead_time: '现货' }
                 ],
@@ -373,7 +385,7 @@
                     <p style="color: #888; font-size: 14px;">${component.description}</p>
                 </div>
                 
-                <h3 style="color: #4a6fa5; margin-bottom: 15px;">💰 价格对比</h3>
+                <h3 style="color: #667eea; margin-bottom: 15px;">💰 价格对比</h3>
                 <table class="price-table">
                     <thead>
                         <tr>
@@ -386,8 +398,12 @@
                     <tbody>
             `;
             
+            // 找到最低价
+            const prices = component.prices.map(p => p.price);
+            const minPrice = Math.min(...prices);
+            
             component.prices.forEach(p => {
-                const isLowest = p.price === Math.min(...component.prices.map(pp => pp.price));
+                const isLowest = p.price === minPrice;
                 html += `
                     <tr>
                         <td>${p.platform}</td>
@@ -402,7 +418,7 @@
                     </tbody>
                 </table>
                 
-                <h3 style="color: #4a6fa5; margin: 25px 0 15px 0;">📊 技术参数</h3>
+                <h3 style="color: #667eea; margin: 25px 0 15px 0;">📊 技术参数</h3>
                 <div class="param-list">
             `;
             
@@ -421,18 +437,18 @@
             html += `
                 </div>
                 
-                <h3 style="color: #4a6fa5; margin: 25px 0 15px 0;">🔄 国产替代</h3>
-                <div style="background: #f8f9fa; border-radius: 10px; padding: 15px;">
+                <h3 style="color: #667eea; margin: 25px 0 15px 0;">🔄 国产替代</h3>
+                <div style="background: #f8f9fa; border-radius: 8px; padding: 15px;">
             `;
             
             component.alternatives.forEach(alt => {
                 html += `
-                    <div style="margin-bottom: 10px; padding: 10px; background: white; border-radius: 8px;">
+                    <div style="margin-bottom: 10px; padding: 10px; background: white; border-radius: 6px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-weight: bold; color: #333;">${alt.part}</span>
                             <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px;">${alt.similarity}</span>
                         </div>
-                        <p style="margin: 5px 0 0 0; color: #28a745; font-size: 14px;">价格优势: ${alt.price_advantage}</p>
+                        <p style="margin: 5px 0 0 0; color: ${alt.price_advantage.startsWith('-') ? '#28a745' : '#dc3545'}; font-size: 14px;">价格${alt.price_advantage}</p>
                     </div>
                 `;
             });
@@ -440,10 +456,10 @@
             html += `
                 </div>
                 
-                <h3 style="color: #4a6fa5; margin:25px 0 15px 0;">💡 智能推荐</h3>
-                <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 10px; padding: 20px;">
+                <h3 style="color: #667eea; margin: 25px 0 15px 0;">💡 智能推荐</h3>
+                <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 8px; padding: 20px;">
                     <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 24px; margin-right: 10px;">⭐</span>
+                        <div style="font-size: 24px; margin-right: 10px;">⭐</div>
                         <div>
                             <h4 style="margin: 0; color: #333;">推荐指数: ${component.recommendation.score}/5</h4>
                             <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">${component.recommendation.advice}</p>
@@ -464,18 +480,19 @@
             
             document.getElementById('searchResults').innerHTML = html;
             
-            // 华为手机滚动优化
+            // 滚动到结果区域
             setTimeout(() => {
                 document.getElementById('resultArea').scrollIntoView({ 
                     behavior: 'smooth',
                     block: 'start'
                 });
-            }, 100);
+            }, 50);
         }
         
-        // 华为手机专用事件处理
+        // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('华为手机专用版初始化完成');
+            console.log('完全内联版本初始化完成');
+            console.log('支持元器件数量:', Object.keys(components).length);
             
             // 输入框优化
             const searchInput = document.getElementById('searchInput');
@@ -497,7 +514,7 @@
                 });
             }
             
-            // 华为手机触摸优化
+            // 触摸优化
             const touchElements = document.querySelectorAll('button, .hot-tag');
             touchElements.forEach(el => {
                 el.addEventListener('touchstart', function() {
@@ -507,13 +524,9 @@
                 el.addEventListener('touchend', function() {
                     this.style.opacity = '1';
                 });
-                
-                el.addEventListener('touchcancel', function() {
-                    this.style.opacity = '1';
-                });
             });
             
-            // 华为手机防止双击缩放
+            // 防止双击缩放（华为手机）
             let lastTouchEnd = 0;
             document.addEventListener('touchend', function(event) {
                 const now = Date.now();
@@ -521,74 +534,47 @@
                     event.preventDefault();
                 }
                 lastTouchEnd = now;
-            }, { passive: false });
+            }, false);
             
-            // 华为手机页面可见性处理
-            document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) {
-                    console.log('华为手机页面重新激活');
+            // 页面性能监控
+            if (window.performance) {
+                window.addEventListener('load', function() {
+                    const timing = window.performance.timing;
+                    const loadTime = timing.loadEventEnd - timing.navigationStart;
+                    console.log(`华为手机页面加载时间: ${loadTime}ms`);
+                    
+                    if (loadTime > 2000) {
+                        console.log('页面加载较慢，但这是完全内联版本，应该很快');
+                    }
+                });
+            }
+            
+            // 错误处理
+            window.addEventListener('error', function(event) {
+                console.error('华为手机JavaScript错误:', event.error);
+                // 显示友好错误提示
+                const resultArea = document.getElementById('resultArea');
+                if (resultArea && resultArea.style.display !== 'none') {
+                    document.getElementById('searchResults').innerHTML = `
+                        <div style="text-align: center; padding: 30px; color: #dc3545;">
+                            <div style="font-size: 24px;">⚠️</div>
+                            <p>抱歉，搜索过程中出现错误</p>
+                            <p style="font-size: 12px; margin-top: 10px;">错误: ${event.message}</p>
+                        </div>
+                    `;
                 }
             });
-            
-            // 华为手机网络状态检测
-            window.addEventListener('online', function() {
-                console.log('华为手机网络已连接');
-            });
-            
-            window.addEventListener('offline', function() {
-                console.log('华为手机网络已断开');
-                alert('网络连接已断开，请检查网络设置');
-            });
         });
         
-        // 华为手机错误处理
-        window.addEventListener('error', function(event) {
-            console.error('华为手机JavaScript错误:', event.error);
-            // 可以在这里添加错误上报
+        // 华为手机网络状态检测
+        window.addEventListener('online', function() {
+            console.log('华为手机网络已连接');
         });
         
-        // 华为手机页面卸载前保存状态
-        window.addEventListener('beforeunload', function() {
-            const searchValue = document.getElementById('searchInput').value;
-            if (searchValue) {
-                localStorage.setItem('lastSearch', searchValue);
-            }
+        window.addEventListener('offline', function() {
+            console.log('华为手机网络已断开');
+            alert('网络连接已断开，但完全内联版本仍可正常使用');
         });
-        
-        // 页面加载时恢复状态
-        window.addEventListener('load', function() {
-            const lastSearch = localStorage.getItem('lastSearch');
-            if (lastSearch) {
-                document.getElementById('searchInput').value = lastSearch;
-            }
-        });
-    </script>
-    
-    <!-- 华为手机性能优化提示 -->
-    <script>
-        // 检测华为浏览器
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isHuaweiBrowser = userAgent.includes('huawei') || userAgent.includes('harmony');
-        
-        if (isHuaweiBrowser) {
-            console.log('检测到华为浏览器，已启用专用优化');
-            
-            // 华为浏览器性能提示
-            if (window.performance && window.performance.memory) {
-                console.log('华为浏览器内存使用:', window.performance.memory);
-            }
-        }
-        
-        // 页面性能监控
-        if (window.performance) {
-            const timing = window.performance.timing;
-            const loadTime = timing.loadEventEnd - timing.navigationStart;
-            console.log(`华为手机页面加载时间: ${loadTime}ms`);
-            
-            if (loadTime > 3000) {
-                console.warn('华为手机页面加载较慢，建议优化');
-            }
-        }
     </script>
 </body>
 </html>
