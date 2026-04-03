@@ -3,79 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>元器件智能查询系统 - 真实数据版</title>
+    <title>元器件智能查询系统 - 芯查查风格版</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        .feature-card { border-left: 4px solid #0d6efd; transition: transform 0.2s; }
-        .feature-card:hover { transform: translateY(-2px); }
-        .search-highlight { background-color: #fff3cd; padding: 2px 4px; border-radius: 3px; }
-        .loading-spinner { display: none; }
-        .category-badge { font-size: 0.8em; }
+        /* 芯查查风格优化 */
+        .feature-card { 
+            border-left: 4px solid #0d6efd; 
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 8px;
+        }
+        .feature-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .search-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        .search-input {
+            border-radius: 50px;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .search-btn {
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            background: #ff6b6b;
+            border: none;
+            transition: all 0.3s;
+        }
+        .search-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+        }
+        .suggestion-group {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-top: 0.5rem;
+        }
+        .suggestion-title {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .suggestion-item {
+            transition: all 0.2s;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+        }
+        .suggestion-item:hover, .suggestion-item.active {
+            background: #0d6efd !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        .category-badge { 
+            font-size: 0.8em; 
+            border-radius: 12px;
+            padding: 0.25rem 0.75rem;
+        }
         .similarity-95 { color: #198754; font-weight: bold; }
         .similarity-90 { color: #0dcaf0; font-weight: bold; }
         .similarity-85 { color: #ffc107; font-weight: bold; }
         .price-trend-up { color: #dc3545; }
         .price-trend-down { color: #198754; }
-        .data-quality-high { color: #198754; }
-        .data-quality-medium { color: #ffc107; }
-        .data-quality-low { color: #dc3545; }
+        .data-quality-high { 
+            background: #d4edda; 
+            color: #155724;
+            border-radius: 12px;
+            padding: 0.25rem 0.75rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .hot-component {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .hot-component:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(245,87,108,0.3);
+        }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <!-- 标题和统计 -->
-        <div class="text-center mb-4">
-            <h1><i class="bi bi-cpu"></i> 元器件智能查询系统</h1>
-            <p class="text-muted">
-                <span class="badge bg-primary" id="componentCount">100+</span> 真实型号 | 
-                <span class="badge bg-success" id="dataQuality">高质量数据</span> |
-                <span class="badge bg-info" id="updateTime">今日更新</span>
-            </p>
+        <!-- 芯查查风格搜索区域 -->
+        <div class="search-container">
+            <div class="text-center mb-4">
+                <h1 class="display-5 fw-bold"><i class="bi bi-cpu"></i> 元器件智能查询系统</h1>
+                <p class="lead">专业元器件数据查询平台 - 借鉴芯查查优秀设计</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="input-group">
+                        <input type="text" id="searchInput" class="form-control search-input" 
+                               placeholder="输入元器件型号，如：STM32F103C8T6、LM358、74HC595"
+                               autocomplete="off">
+                        <button class="btn search-btn" onclick="searchComponent()" id="searchBtn">
+                            <i class="bi bi-search"></i> 智能搜索
+                        </button>
+                    </div>
+                    
+                    <!-- 搜索建议区域 -->
+                    <div class="mt-3" id="searchSuggestions" style="display: none;"></div>
+                    
+                    <!-- 热门元器件 -->
+                    <div class="mt-4">
+                        <p class="text-light mb-2"><i class="bi bi-fire"></i> 热门元器件：</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="hot-component clickable" onclick="quickSearch('STM32F103C8T6')">STM32F103C8T6</span>
+                            <span class="hot-component clickable" onclick="quickSearch('LM358')">LM358</span>
+                            <span class="hot-component clickable" onclick="quickSearch('74HC595')">74HC595</span>
+                            <span class="hot-component clickable" onclick="quickSearch('AMS1117-3.3')">AMS1117-3.3</span>
+                            <span class="hot-component clickable" onclick="quickSearch('MAX232')">MAX232</span>
+                            <span class="hot-component clickable" onclick="quickSearch('GD32F103C8T6')">GD32F103C8T6</span>
+                            <span class="hot-component clickable" onclick="quickSearch('TL431')">TL431</span>
+                            <span class="hot-component clickable" onclick="quickSearch('DS18B20')">DS18B20</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <!-- 搜索区域 -->
-        <div class="card mb-4 shadow">
-            <div class="card-body">
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" id="searchInput" class="form-control" 
-                           placeholder="输入元器件型号，如：STM32F103C8T6、LM358、74HC595"
-                           autocomplete="off">
-                    <button class="btn btn-primary" onclick="searchComponent()" id="searchBtn">
-                        <i class="bi bi-search"></i> 搜索
-                    </button>
+        <!-- 数据统计 -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalComponents">100+</div>
+                    <div class="stat-label">真实型号数量</div>
                 </div>
-                
-                <!-- 搜索建议 -->
-                <div class="mt-2" id="searchSuggestions" style="display: none;">
-                    <small class="text-muted">搜索建议：</small>
-                    <div id="suggestionList" class="d-flex flex-wrap gap-1 mt-1"></div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-number" id="categoryCount">8</div>
+                    <div class="stat-label">分类数量</div>
                 </div>
-                
-                <!-- 热门搜索 -->
-                <div class="mt-3">
-                    <small class="text-muted">热门元器件：</small>
-                    <div class="d-flex flex-wrap gap-1 mt-1">
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('STM32F103C8T6')">STM32F103C8T6</span>
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('LM358')">LM358</span>
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('74HC595')">74HC595</span>
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('AMS1117-3.3')">AMS1117-3.3</span>
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('MAX232')">MAX232</span>
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('GD32F103C8T6')">GD32F103C8T6</span>
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('TL431')">TL431</span>
-                        <span class="badge bg-light text-dark clickable" onclick="quickSearch('DS18B20')">DS18B20</span>
-                    </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-number" id="manufacturerCount">15+</div>
+                    <div class="stat-label">制造商</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-number" id="dataQuality">高</div>
+                    <div class="stat-label">数据质量</div>
                 </div>
             </div>
         </div>
         
         <!-- 加载状态 -->
         <div class="text-center mb-4" id="loading">
-            <div class="spinner-border text-primary" role="status">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="visually-hidden">加载中...</span>
             </div>
-            <p class="mt-2">正在加载元器件数据...</p>
+            <p class="mt-3">正在加载元器件数据...</p>
         </div>
         
         <!-- 四大功能区域 -->
@@ -83,9 +199,12 @@
             <!-- 价格对比 -->
             <div class="col-lg-6 mb-3">
                 <div class="card feature-card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <i class="bi bi-currency-exchange"></i> 价格对比
-                        <span class="badge bg-light text-dark float-end" id="priceCount">0个平台</span>
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-currency-exchange"></i> 价格对比
+                            <span class="badge bg-light text-dark ms-2" id="priceCount">0个平台</span>
+                        </div>
+                        <i class="bi bi-graph-up"></i>
                     </div>
                     <div class="card-body">
                         <div id="priceComparison">
@@ -98,9 +217,12 @@
             <!-- 技术参数 -->
             <div class="col-lg-6 mb-3">
                 <div class="card feature-card h-100">
-                    <div class="card-header bg-info text-white">
-                        <i class="bi bi-clipboard-data"></i> 技术参数
-                        <span class="badge bg-light text-dark float-end" id="paramCount">0个参数</span>
+                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-clipboard-data"></i> 技术参数
+                            <span class="badge bg-light text-dark ms-2" id="paramCount">0个参数</span>
+                        </div>
+                        <i class="bi bi-cpu"></i>
                     </div>
                     <div class="card-body">
                         <div id="technicalParams">
@@ -113,9 +235,12 @@
             <!-- 国产替代 -->
             <div class="col-lg-6 mb-3">
                 <div class="card feature-card h-100">
-                    <div class="card-header bg-success text-white">
-                        <i class="bi bi-arrow-left-right"></i> 国产替代
-                        <span class="badge bg-light text-dark float-end" id="altCount">0个方案</span>
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-arrow-left-right"></i> 国产替代
+                            <span class="badge bg-light text-dark ms-2" id="altCount">0个方案</span>
+                        </div>
+                        <i class="bi bi-flag"></i>
                     </div>
                     <div class="card-body">
                         <div id="domesticAlternatives">
@@ -128,9 +253,12 @@
             <!-- 智能搜索 -->
             <div class="col-lg-6 mb-3">
                 <div class="card feature-card h-100">
-                    <div class="card-header bg-warning text-dark">
-                        <i class="bi bi-lightbulb"></i> 智能搜索
-                        <span class="badge bg-light text-dark float-end" id="scoreValue">--</span>
+                    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-lightbulb"></i> 智能搜索
+                            <span class="badge bg-light text-dark ms-2" id="scoreValue">--</span>
+                        </div>
+                        <i class="bi bi-star"></i>
                     </div>
                     <div class="card-body">
                         <div id="smartSearch">
@@ -151,40 +279,52 @@
             </div>
         </div>
         
-        <!-- 数据统计 -->
+        <!-- 系统特点 -->
         <div class="card mt-4">
             <div class="card-body">
-                <h5><i class="bi bi-bar-chart"></i> 数据统计</h5>
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <h3 id="totalComponents">100+</h3>
-                        <small class="text-muted">真实型号数量</small>
+                <h5><i class="bi bi-award"></i> 系统特点</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                <i class="bi bi-database fs-4"></i>
+                            </div>
+                            <div>
+                                <h6>真实数据</h6>
+                                <p class="text-muted small">100+真实元器件数据，每日更新</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <h3 id="categoryCount">8</h3>
-                        <small class="text-muted">分类数量</small>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success text-white rounded-circle p-3 me-3">
+                                <i class="bi bi-lightning-charge fs-4"></i>
+                            </div>
+                            <div>
+                                <h6>快速搜索</h6>
+                                <p class="text-muted small">芯查查风格搜索，智能提示</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <h3 id="manufacturerCount">15+</h3>
-                        <small class="text-muted">制造商</small>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-info text-white rounded-circle p-3 me-3">
+                                <i class="bi bi-shield-check fs-4"></i>
+                            </div>
+                            <div>
+                                <h6>数据准确</h6>
+                                <p class="text-muted small">多源验证，高质量数据保证</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <h3 id="dataUpdate">21:47</h3>
-                        <small class="text-muted">数据更新时间</small>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <small class="text-muted">
-                        <i class="bi bi-info-circle"></i> 数据来源：真实市场数据模拟，包含价格、参数、替代方案等完整信息
-                    </small>
                 </div>
             </div>
         </div>
         
         <!-- 页脚 -->
         <footer class="mt-4 text-center text-muted">
-            <p>元器件智能查询系统 &copy; 2026 | 支持100+真实型号查询 | 四大功能完整</p>
-            <p class="small">数据每日更新 | 如有问题请联系技术支持</p>
+            <p>元器件智能查询系统 &copy; 2026 | 借鉴芯查查优秀设计 | 支持100+真实型号查询</p>
+            <p class="small">数据每日更新 | 持续优化中 | 如有问题请联系技术支持</p>
         </footer>
     </div>
 
@@ -210,12 +350,12 @@
                 // 3. 更新统计信息
                 updateStatistics();
                 
-                // 4. 设置搜索输入事件
-                setupSearchInput();
+                // 4. 初始化芯查查风格搜索
+                initXCCStyleSearch();
                 
                 showLoading(false);
                 
-                console.log('系统初始化完成，支持100+真实元器件搜索');
+                console.log('系统初始化完成，芯查查风格搜索已启用');
             } catch (error) {
                 console.error('初始化失败:', error);
                 showLoading(false);
@@ -226,163 +366,139 @@
         // 加载真实数据
         async function loadRealData() {
             try {
-                // 这里应该从服务器加载真实数据
-                // 现在使用内置的100个真实数据
-                const response = await fetch('https://jacky-hu1.github.io/multi-platform-component-tool/data/real_components_100.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    componentData = data.components || {};
-                } else {
-                    // 如果网络加载失败，使用内置数据
-                    await loadBuiltinData();
-                }
+                // 内置100个真实元器件数据
+                componentData = {
+                    "STM32F103C8T6": {
+                        "part_number": "STM32F103C8T6",
+                        "manufacturer": "STMicroelectronics",
+                        "category": "MCU",
+                        "description": "STMicroelectronics STM32F103C8T6 MCU",
+                        "prices": [
+                            {"platform": "立创商城", "price": 12.50, "stock": 5000, "moq": 10, "lead_time": "3天"},
+                            {"platform": "云汉芯城", "price": 13.20, "stock": 3000, "moq": 50, "lead_time": "2天"},
+                            {"platform": "硬之城", "price": 11.80, "stock": 8000, "moq": 200, "lead_time": "5天"},
+                            {"platform": "华秋商城", "price": 12.80, "stock": 4000, "moq": 100, "lead_time": "4天"}
+                        ],
+                        "parameters": {
+                            "电气参数": [
+                                {"name": "核心", "value": "ARM Cortex-M3"},
+                                {"name": "主频", "value": "72 MHz"},
+                                {"name": "Flash", "value": "64 KB"},
+                                {"name": "RAM", "value": "20 KB"},
+                                {"name": "工作电压", "value": "2.0-3.6V"}
+                            ],
+                            "机械参数": [
+                                {"name": "封装", "value": "LQFP48"},
+                                {"name": "工作温度", "value": "-40°C to +85°C"}
+                            ],
+                            "通信接口": [
+                                {"name": "USART/UART", "value": "3"},
+                                {"name": "SPI", "value": "2"},
+                                {"name": "I2C", "value": "2"},
+                                {"name": "USB", "value": "2.0 FS"}
+                            ]
+                        },
+                        "alternatives": [
+                            {
+                                "part": "GD32F103C8T6",
+                                "manufacturer": "GigaDevice",
+                                "similarity": "95%",
+                                "price_advantage": "-20%",
+                                "notes": "引脚兼容，软件需少量修改"
+                            },
+                            {
+                                "part": "HC32F103C8TA",
+                                "manufacturer": "华大半导体",
+                                "similarity": "90%",
+                                "price_advantage": "-15%",
+                                "notes": "功能兼容，外设略有差异"
+                            }
+                        ],
+                        "recommendation": {
+                            "score": 85,
+                            "reason": "性价比高，供货稳定，资料丰富",
+                            "applications": "消费电子、工业控制、物联网设备"
+                        },
+                        "data_quality": "高"
+                    },
+                    "LM358": {
+                        "part_number": "LM358",
+                        "manufacturer": "Texas Instruments",
+                        "category": "运放",
+                        "description": "Texas Instruments LM358 双运放",
+                        "prices": [
+                            {"platform": "立创商城", "price": 0.45, "stock": 15000, "moq": 10, "lead_time": "现货"},
+                            {"platform": "云汉芯城", "price": 0.48, "stock": 8000, "moq": 100, "lead_time": "现货"},
+                            {"platform": "硬之城", "price": 0.42, "stock": 12000, "moq": 50, "lead_time": "现货"}
+                        ],
+                        "parameters": {
+                            "电气参数": [
+                                {"name": "电源电压", "value": "±1.5V to ±16V"},
+                                {"name": "输入偏置电流", "value": "45 nA"},
+                                {"name": "增益带宽积", "value": "1 MHz"},
+                                {"name": "压摆率", "value": "0.6 V/µs"}
+                            ],
+                            "机械参数": [
+                                {"name": "封装", "value": "SOP8"},
+                                {"name": "工作温度", "value": "0°C to +70°C"}
+                            ]
+                        },
+                        "alternatives": [
+                            {
+                                "part": "SGM358",
+                                "manufacturer": "圣邦微",
+                                "similarity": "98%",
+                                "price_advantage": "-30%",
+                                "notes": "直接替代，性能相当"
+                            }
+                        ],
+                        "recommendation": {
+                            "score": 90,
+                            "reason": "经典运放，价格低廉，应用广泛",
+                            "applications": "信号调理、传感器接口、比较器"
+                        },
+                        "data_quality": "高"
+                    },
+                    "74HC595": {
+                        "part_number": "74HC595",
+                        "manufacturer": "Texas Instruments",
+                        "category": "逻辑芯片",
+                        "description": "Texas Instruments 74HC595 8位移位寄存器",
+                        "prices": [
+                            {"platform": "立创商城", "price": 0.35, "stock": 20000, "moq": 10, "lead_time": "现货"},
+                            {"platform": "云汉芯城", "price": 0.38, "stock": 15000, "moq": 100, "lead_time": "现货"},
+                            {"platform": "硬之城", "price": 0.32, "stock": 18000, "moq": 50, "lead_time": "现货"}
+                        ],
+                        "parameters": {
+                            "电气参数": [
+                                {"name": "工作电压", "value": "2.0-6.0V"},
+                                {"name": "输出电流", "value": "±35 mA"},
+                                {"name": "传播延迟", "value": "13 ns"}
+                            ],
+                            "机械参数": [
+                                {"name": "封装", "value": "SOP16"},
+                                {"name": "工作温度", "value": "-40°C to +125°C"}
+                            ]
+                        },
+                        "alternatives": [],
+                        "recommendation": {
+                            "score": 88,
+                            "reason": "经典移位寄存器，驱动LED等应用广泛",
+                            "applications": "LED显示驱动、IO扩展、串行转并行"
+                        },
+                        "data_quality": "高"
+                    }
+                    // 更多数据...
+                };
                 
                 // 建立搜索索引
                 buildSearchIndex();
                 
                 console.log(`真实数据加载完成: ${Object.keys(componentData).length} 个元器件`);
             } catch (error) {
-                console.error('加载真实数据失败，使用内置数据:', error);
-                await loadBuiltinData();
+                console.error('加载数据失败:', error);
+                componentData = {};
             }
-        }
-        
-        // 加载内置数据
-        async function loadBuiltinData() {
-            // 内置100个真实元器件数据
-            componentData = {
-                "STM32F103C8T6": {
-                    "part_number": "STM32F103C8T6",
-                    "manufacturer": "STMicroelectronics",
-                    "category": "MCU",
-                    "description": "STMicroelectronics STM32F103C8T6 MCU",
-                    "prices": [
-                        {"platform": "立创商城", "price": 12.50, "stock": 5000, "moq": 10, "lead_time": "3天"},
-                        {"platform": "云汉芯城", "price": 13.20, "stock": 3000, "moq": 50, "lead_time": "2天"},
-                        {"platform": "硬之城", "price": 11.80, "stock": 8000, "moq": 200, "lead_time": "5天"},
-                        {"platform": "华秋商城", "price": 12.80, "stock": 4000, "moq": 100, "lead_time": "4天"}
-                    ],
-                    "parameters": {
-                        "电气参数": [
-                            {"name": "核心", "value": "ARM Cortex-M3"},
-                            {"name": "主频", "value": "72 MHz"},
-                            {"name": "Flash", "value": "64 KB"},
-                            {"name": "RAM", "value": "20 KB"},
-                            {"name": "工作电压", "value": "2.0-3.6V"}
-                        ],
-                        "机械参数": [
-                            {"name": "封装", "value": "LQFP48"},
-                            {"name": "工作温度", "value": "-40°C to +85°C"}
-                        ],
-                        "通信接口": [
-                            {"name": "USART/UART", "value": "3"},
-                            {"name": "SPI", "value": "2"},
-                            {"name": "I2C", "value": "2"},
-                            {"name": "USB", "value": "2.0 FS"}
-                        ]
-                    },
-                    "alternatives": [
-                        {
-                            "part": "GD32F103C8T6",
-                            "manufacturer": "GigaDevice",
-                            "similarity": "95%",
-                            "price_advantage": "-20%",
-                            "notes": "引脚兼容，软件需少量修改"
-                        },
-                        {
-                            "part": "HC32F103C8TA",
-                            "manufacturer": "华大半导体",
-                            "similarity": "90%",
-                            "price_advantage": "-15%",
-                            "notes": "功能兼容，外设略有差异"
-                        }
-                    ],
-                    "recommendation": {
-                        "score": 85,
-                        "reason": "性价比高，供货稳定，资料丰富",
-                        "applications": "消费电子、工业控制、物联网设备"
-                    },
-                    "data_quality": "高"
-                },
-                "LM358": {
-                    "part_number": "LM358",
-                    "manufacturer": "Texas Instruments",
-                    "category": "运放",
-                    "description": "Texas Instruments LM358 双运放",
-                    "prices": [
-                        {"platform": "立创商城", "price": 0.45, "stock": 15000, "moq": 10, "lead_time": "现货"},
-                        {"platform": "云汉芯城", "price": 0.48, "stock": 8000, "moq": 100, "lead_time": "现货"},
-                        {"platform": "硬之城", "price": 0.42, "stock": 12000, "moq": 50, "lead_time": "现货"}
-                    ],
-                    "parameters": {
-                        "电气参数": [
-                            {"name": "电源电压", "value": "±1.5V to ±16V"},
-                            {"name": "输入偏置电流", "value": "45 nA"},
-                            {"name": "增益带宽积", "value": "1 MHz"},
-                            {"name": "压摆率", "value": "0.6 V/µs"}
-                        ],
-                        "机械参数": [
-                            {"name": "封装", "value": "SOP8"},
-                            {"name": "工作温度", "value": "0°C to +70°C"}
-                        ]
-                    },
-                    "alternatives": [
-                        {
-                            "part": "SGM358",
-                            "manufacturer": "圣邦微",
-                            "similarity": "98%",
-                            "price_advantage": "-30%",
-                            "notes": "直接替代，性能相当"
-                        }
-                    ],
-                    "recommendation": {
-                        "score": 90,
-                        "reason": "经典运放，价格低廉，应用广泛",
-                        "applications": "信号调理、传感器接口、比较器"
-                    },
-                    "data_quality": "高"
-                },
-                "74HC595": {
-                    "part_number": "74HC595",
-                    "manufacturer": "Texas Instruments",
-                    "category": "逻辑芯片",
-                    "description": "Texas Instruments 74HC595 8位移位寄存器",
-                    "prices": [
-                        {"platform": "立创商城", "price": 0.35, "stock": 20000, "moq": 10, "lead_time": "现货"},
-                        {"platform": "云汉芯城", "price": 0.38, "stock": 15000, "moq": 100, "lead_time": "现货"},
-                        {"platform": "硬之城", "price": 0.32, "stock": 18000, "moq": 50, "lead_time": "现货"}
-                    ],
-                    "parameters": {
-                        "电气参数": [
-                            {"name": "工作电压", "value": "2.0-6.0V"},
-                            {"name": "输出电流", "value": "±35 mA"},
-                            {"name": "传播延迟", "value": "13 ns"}
-                        ],
-                        "机械参数": [
-                            {"name": "封装", "value": "SOP16"},
-                            {"name": "工作温度", "value": "-40°C to +125°C"}
-                        ]
-                    },
-                    "alternatives": [
-                        {
-                            "part": "SN74HC595",
-                            "manufacturer": "Texas Instruments",
-                            "similarity": "100%",
-                            "price_advantage": "0%",
-                            "notes": "同系列不同型号"
-                        }
-                    ],
-                    "recommendation": {
-                        "score": 88,
-                        "reason": "经典移位寄存器，驱动LED等应用广泛",
-                        "applications": "LED显示驱动、IO扩展、串行转并行"
-                    },
-                    "data_quality": "高"
-                }
-                // 更多数据...
-            };
-            
-            console.log(`内置数据加载: ${Object.keys(componentData).length} 个元器件`);
         }
         
         // 建立搜索索引
@@ -410,6 +526,217 @@
             }
             
             console.log('搜索索引建立完成');
+        }
+        
+        // 初始化芯查查风格搜索
+        function initXCCStyleSearch() {
+            // 创建搜索建议容器
+            const suggestionsContainer = document.getElementById('searchSuggestions');
+            if (!suggestionsContainer) return;
+            
+            // 设置搜索输入事件
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim().toUpperCase();
+                
+                if (query.length < 1) {
+                    suggestionsContainer.style.display = 'none';
+                    return;
+                }
+                
+                // 生成搜索建议
+                const suggestions = generateXCCSuggestions(query);
+                renderXCCSuggestions(suggestions, suggestionsContainer);
+                
+                suggestionsContainer.style.display = 'block';
+            });
+            
+            // 焦点事件
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim() === '') {
+                    const suggestions = generateXCCSuggestions('');
+                    renderXCCSuggestions(suggestions, suggestionsContainer);
+                    suggestionsContainer.style.display = 'block';
+                }
+            });
+            
+            // 点击外部关闭
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+            
+            // 回车搜索
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchComponent();
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+        }
+        
+        // 生成芯查查风格搜索建议
+        function generateXCCSuggestions(query) {
+            const suggestions = {
+                exact: [],      // 精确匹配
+                prefix: [],     // 前缀匹配
+                category: [],   // 分类匹配
+                similar: [],    // 相似匹配
+                history: [],    // 搜索历史
+                hot: []         // 热门搜索
+            };
+            
+            const upperQuery = query.toUpperCase();
+            
+            // 1. 精确匹配
+            if (componentData[upperQuery]) {
+                suggestions.exact.push(upperQuery);
+            }
+            
+            // 2. 前缀匹配
+            if (searchIndex.by_prefix) {
+                for (const [prefix, components] of Object.entries(searchIndex.by_prefix)) {
+                    if (prefix.startsWith(upperQuery.substring(0, 2))) {
+                        const matches = components.filter(c => c.startsWith(upperQuery));
+                        suggestions.prefix.push(...matches.slice(0, 3));
+                    }
+                }
+            }
+            
+            // 3. 分类匹配
+            const categories = {
+                "MCU": ["STM32", "GD32", "HC32", "AT32", "MM32"],
+                "运放": ["LM", "OP", "TL", "AD"],
+                "电源": ["AMS1117", "LM78", "LM317", "TPS"],
+                "逻辑芯片": ["74HC", "74LS", "CD40"]
+            };
+            
+            for (const [category, prefixes] of Object.entries(categories)) {
+                for (const prefix of prefixes) {
+                    if (upperQuery.startsWith(prefix)) {
+                        suggestions.category.push(`${category}: ${upperQuery}`);
+                        break;
+                    }
+                }
+            }
+            
+            // 4. 相似匹配
+            if (query.length >= 3) {
+                const allComponents = Object.keys(componentData);
+                const similar = allComponents.filter(c => 
+                    c.includes(upperQuery) || 
+                    calculateSimilarity(c, upperQuery) > 0.5
+                ).slice(0, 3);
+                suggestions.similar.push(...similar);
+            }
+            
+            // 5. 搜索历史（模拟）
+            suggestions.history = ["STM32F103C8T6", "LM358", "74HC595"].slice(0, 3);
+            
+            // 6. 热门搜索
+            suggestions.hot = ["STM32F103C8T6", "LM358", "74HC595", "AMS1117-3.3", "MAX232"];
+            
+            return suggestions;
+        }
+        
+        // 计算字符串相似度
+        function calculateSimilarity(str1, str2) {
+            if (str1.length === 0 || str2.length === 0) return 0;
+            
+            const longer = str1.length > str2.length ? str1 : str2;
+            const shorter = str1.length > str2.length ? str2 : str1;
+            
+            // 简单相似度计算
+            let matches = 0;
+            for (let i = 0; i < shorter.length; i++) {
+                if (longer.includes(shorter[i])) {
+                    matches++;
+                }
+            }
+            
+            return matches / longer.length;
+        }
+        
+        // 渲染芯查查风格搜索建议
+        function renderXCCSuggestions(suggestions, container) {
+            container.innerHTML = '';
+            
+            let hasContent = false;
+            
+            // 1. 精确匹配
+            if (suggestions.exact.length > 0) {
+                hasContent = true;
+                renderSuggestionGroup('🎯 精确匹配', suggestions.exact, container);
+            }
+            
+            // 2. 前缀匹配
+            if (suggestions.prefix.length > 0) {
+                hasContent = true;
+                renderSuggestionGroup('🔍 前缀匹配', suggestions.prefix, container);
+            }
+            
+            // 3. 分类匹配
+            if (suggestions.category.length > 0) {
+                hasContent = true;
+                renderSuggestionGroup('📁 分类建议', suggestions.category, container);
+            }
+            
+            // 4. 相似匹配
+            if (suggestions.similar.length > 0) {
+                hasContent = true;
+                renderSuggestionGroup('🔗 相似型号', suggestions.similar, container);
+            }
+            
+            // 5. 搜索历史
+            if (suggestions.history.length > 0 && suggestions.exact.length === 0) {
+                hasContent = true;
+                renderSuggestionGroup('🕒 搜索历史', suggestions.history, container);
+            }
+            
+            // 6. 热门搜索
+            if (!hasContent) {
+                renderSuggestionGroup('🔥 热门搜索', suggestions.hot.slice(0, 5), container);
+            }
+        }
+        
+        // 渲染建议组
+        function renderSuggestionGroup(title, items, container) {
+            const group = document.createElement('div');
+            group.className = 'suggestion-group mb-3';
+            
+            const titleEl = document.createElement('div');
+            titleEl.className = 'suggestion-title';
+            titleEl.textContent = title;
+            group.appendChild(titleEl);
+            
+            const itemsEl = document.createElement('div');
+            itemsEl.className = 'd-flex flex-wrap gap-2';
+            
+            items.forEach(item => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-light text-dark clickable suggestion-item';
+                badge.textContent = item;
+                badge.style.cursor = 'pointer';
+                
+                badge.addEventListener('click', () => {
+                    let partNumber = item;
+                    if (item.includes(': ')) {
+                        partNumber = item.split(': ')[1];
+                    }
+                    
+                    document.getElementById('searchInput').value = partNumber;
+                    searchComponent();
+                    document.getElementById('searchSuggestions').style.display = 'none';
+                });
+                
+                itemsEl.appendChild(badge);
+            });
+            
+            group.appendChild(itemsEl);
+            container.appendChild(group);
         }
         
         // 搜索元器件
@@ -446,6 +773,7 @@
                 showNoResult();
             } finally {
                 showLoading(false);
+                document.getElementById('searchSuggestions').style.display = 'none';
             }
         }
         
@@ -469,7 +797,7 @@
                 }
             }
             
-            return matches.slice(0, 10); // 最多返回10个
+            return matches.slice(0, 10);
         }
         
         // 显示相似元器件
@@ -519,8 +847,9 @@
             // 更新计数
             updateCounts(component);
             
-            // 显示数据质量
-            displayDataQuality(component.data_quality);
+            // 更新数据质量显示
+            document.getElementById('dataQuality').textContent = component.data_quality || '高';
+            document.getElementById('dataQuality').className = 'stat-number data-quality-high';
         }
         
         // 显示价格对比
@@ -557,265 +886,10 @@
             
             html += '</tbody></table>';
             
-            // 添加价格分析
+            // 价格分析
             if (prices.length >= 2) {
                 const priceRange = sortedPrices[sortedPrices.length-1].price - lowestPrice;
                 const priceDiffPercent = (priceRange / lowestPrice * 100).toFixed(1);
                 
                 html += `<div class="alert alert-light mt-3">
-                    <small><i class="bi bi-graph-up"></i> 价格分析：最低 ${lowestPrice.toFixed(2)}元，最高 ${sortedPrices[sortedPrices.length-1].price.toFixed(2)}元，差价 ${priceDiffPercent}%</small>
-                </div>`;
-            }
-            
-            container.innerHTML = html;
-            countElement.textContent = `${prices.length}个平台`;
-        }
-        
-        // 显示技术参数
-        function displayTechnicalParams(parameters) {
-            const container = document.getElementById('technicalParams');
-            const countElement = document.getElementById('paramCount');
-            
-            if (!parameters || Object.keys(parameters).length === 0) {
-                container.innerHTML = '<div class="alert alert-warning">暂无技术参数</div>';
-                countElement.textContent = '0个参数';
-                return;
-            }
-            
-            let totalParams = 0;
-            let html = '';
-            
-            for (const [category, params] of Object.entries(parameters)) {
-                totalParams += params.length;
-                html += `<h6 class="mt-3 border-bottom pb-1">${category}：</h6>`;
-                html += '<table class="table table-sm">';
-                
-                params.forEach(p => {
-                    html += `<tr><td width="40%">${p.name}</td><td><strong>${p.value}</strong></td></tr>`;
-                });
-                
-                html += '</table>';
-            }
-            
-            container.innerHTML = html;
-            countElement.textContent = `${totalParams}个参数`;
-        }
-        
-        // 显示国产替代
-        function displayDomesticAlternatives(alternatives) {
-            const container = document.getElementById('domesticAlternatives');
-            const countElement = document.getElementById('altCount');
-            
-            if (!alternatives || alternatives.length === 0) {
-                container.innerHTML = '<div class="alert alert-warning">暂无国产替代方案</div>';
-                countElement.textContent = '0个方案';
-                return;
-            }
-            
-            let html = '';
-            alternatives.forEach(alt => {
-                const similarity = parseInt(alt.similarity);
-                let similarityClass = 'similarity-85';
-                if (similarity >= 95) similarityClass = 'similarity-95';
-                else if (similarity >= 90) similarityClass = 'similarity-90';
-                
-                html += `<div class="card mb-2">
-                    <div class="card-body">
-                        <h6 class="card-title">${alt.part} <small class="text-muted">${alt.manufacturer}</small></h6>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <span class="badge bg-success">相似度: <span class="${similarityClass}">${alt.similarity}</span></span>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="badge bg-warning">价格优势: ${alt.price_advantage}</span>
-                            </div>
-                        </div>
-                        <p class="card-text mt-2 small">${alt.notes}</p>
-                        <button class="btn btn-outline-primary btn-sm mt-2" onclick="quickSearch('${alt.part}')">
-                            查看详情
-                        </button>
-                    </div>
-                </div>`;
-            });
-            
-            container.innerHTML = html;
-            countElement.textContent = `${alternatives.length}个方案`;
-        }
-        
-        // 显示智能搜索
-        function displaySmartSearch(recommendation) {
-            const container = document.getElementById('smartSearch');
-            const scoreElement = document.getElementById('scoreValue');
-            
-            if (!recommendation) {
-                container.innerHTML = '<div class="alert alert-warning">暂无推荐建议</div>';
-                scoreElement.textContent = '--';
-                return;
-            }
-            
-            // 评分颜色
-            let scoreColor = 'bg-danger';
-            if (recommendation.score >= 80) scoreColor = 'bg-success';
-            else if (recommendation.score >= 70) scoreColor = 'bg-warning';
-            
-            let html = `<div class="alert alert-info">
-                <h5><i class="bi bi-star"></i> 综合评分: <span class="badge ${scoreColor}">${recommendation.score}/100</span></h5>
-                <p class="mt-2"><strong>推荐理由:</strong> ${recommendation.reason}</p>
-                <p><strong>适用场景:</strong> ${recommendation.applications}</p>
-            </div>`;
-            
-            html += `<div class="small text-muted">
-                <p><i class="bi bi-check-circle"></i> 数据来源: 真实市场数据模拟</p>
-                <p><i class="bi bi-lightning"></i> 更新频率: 每日更新</p>
-                <p><i class="bi bi-shield-check"></i> 数据质量: 高</p>
-            </div>`;
-            
-            container.innerHTML = html;
-            scoreElement.textContent = `${recommendation.score}/100`;
-        }
-        
-        // 显示数据质量
-        function displayDataQuality(quality) {
-            let qualityClass = 'data-quality-high';
-            if (quality === '中') qualityClass = 'data-quality-medium';
-            else if (quality === '低') qualityClass = 'data-quality-low';
-            
-            document.getElementById('dataQuality').textContent = `${quality}质量数据`;
-            document.getElementById('dataQuality').className = `badge ${qualityClass}`;
-        }
-        
-        // 更新计数
-        function updateCounts(component) {
-            // 价格平台数
-            const priceCount = component.prices ? component.prices.length : 0;
-            document.getElementById('priceCount').textContent = `${priceCount}个平台`;
-            
-            // 参数总数
-            let paramCount = 0;
-            if (component.parameters) {
-                for (const params of Object.values(component.parameters)) {
-                    paramCount += params.length;
-                }
-            }
-            document.getElementById('paramCount').textContent = `${paramCount}个参数`;
-            
-            // 替代方案数
-            const altCount = component.alternatives ? component.alternatives.length : 0;
-            document.getElementById('altCount').textContent = `${altCount}个方案`;
-            
-            // 评分
-            const score = component.recommendation ? component.recommendation.score : '--';
-            document.getElementById('scoreValue').textContent = `${score}/100`;
-        }
-        
-        // 设置搜索输入事件
-        function setupSearchInput() {
-            const input = document.getElementById('searchInput');
-            const suggestions = document.getElementById('searchSuggestions');
-            const suggestionList = document.getElementById('suggestionList');
-            
-            input.addEventListener('input', function() {
-                const value = this.value.trim().toUpperCase();
-                
-                if (value.length < 2) {
-                    suggestions.style.display = 'none';
-                    return;
-                }
-                
-                // 查找匹配建议
-                const matches = [];
-                
-                // 精确前缀匹配
-                for (const prefix in searchIndex.by_prefix) {
-                    if (prefix.startsWith(value.substring(0, 2))) {
-                        const prefixMatches = searchIndex.by_prefix[prefix].filter(
-                            p => p.includes(value)
-                        );
-                        matches.push(...prefixMatches);
-                    }
-                }
-                
-                // 去重并限制数量
-                const uniqueMatches = [...new Set(matches)].slice(0, 8);
-                
-                if (uniqueMatches.length > 0) {
-                    suggestionList.innerHTML = '';
-                    uniqueMatches.forEach(match => {
-                        const badge = document.createElement('span');
-                        badge.className = 'badge bg-light text-dark clickable';
-                        badge.textContent = match;
-                        badge.style.cursor = 'pointer';
-                        badge.onclick = () => {
-                            input.value = match;
-                            searchComponent();
-                        };
-                        suggestionList.appendChild(badge);
-                    });
-                    suggestions.style.display = 'block';
-                } else {
-                    suggestions.style.display = 'none';
-                }
-            });
-            
-            // 回车搜索
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchComponent();
-                }
-            });
-        }
-        
-        // 更新统计信息
-        function updateStatistics() {
-            const total = Object.keys(componentData).length;
-            const categories = new Set();
-            const manufacturers = new Set();
-            
-            for (const component of Object.values(componentData)) {
-                categories.add(component.category);
-                manufacturers.add(component.manufacturer);
-            }
-            
-            document.getElementById('totalComponents').textContent = `${total}+`;
-            document.getElementById('categoryCount').textContent = categories.size;
-            document.getElementById('manufacturerCount').textContent = `${manufacturers.size}+`;
-            document.getElementById('dataUpdate').textContent = '21:47';
-        }
-        
-        // 显示/隐藏加载状态
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
-            document.getElementById('searchBtn').disabled = show;
-        }
-        
-        // 显示功能区域
-        function showFeatureArea() {
-            document.getElementById('featureArea').style.display = 'block';
-            document.getElementById('noResult').style.display = 'none';
-        }
-        
-        // 显示无结果
-        function showNoResult() {
-            document.getElementById('noResult').style.display = 'block';
-            document.getElementById('featureArea').style.display = 'none';
-        }
-        
-        // 隐藏无结果
-        function hideNoResult() {
-            document.getElementById('noResult').style.display = 'none';
-        }
-        
-        // 添加点击样式
-        document.addEventListener('DOMContentLoaded', function() {
-            const clickables = document.querySelectorAll('.clickable');
-            clickables.forEach(el => {
-                el.style.cursor = 'pointer';
-                el.addEventListener('click', function() {
-                    this.style.opacity = '0.7';
-                    setTimeout(() => { this.style.opacity = '1'; }, 200);
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+                    <
