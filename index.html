@@ -1,0 +1,265 @@
+            "LM358": {
+                "part_number": "LM358",
+                "manufacturer": "TI",
+                "category": "运算放大器",
+                "description": "双路通用运算放大器，低功耗，宽电压范围",
+                "prices": [
+                    {"platform": "立创商城", "price": 0.85, "stock": 5000, "moq": 100, "lead_time": "3天"},
+                    {"platform": "云汉芯城", "price": 0.90, "stock": 3000, "moq": 50, "lead_time": "2天"},
+                    {"platform": "硬之城", "price": 0.82, "stock": 8000, "moq": 200, "lead_time": "5天"}
+                ],
+                "parameters": {
+                    "电气参数": [
+                        {"name": "供电电压", "value": "3-32", "unit": "V"},
+                        {"name": "输入偏置电流", "value": "45", "unit": "nA"},
+                        {"name": "增益带宽积", "value": "1", "unit": "MHz"},
+                        {"name": "压摆率", "value": "0.6", "unit": "V/μs"},
+                        {"name": "输入失调电压", "value": "2", "unit": "mV"}
+                    ],
+                    "机械参数": [
+                        {"name": "封装", "value": "SOIC-8/DIP-8", "unit": ""},
+                        {"name": "工作温度", "value": "0 to +70", "unit": "°C"}
+                    ]
+                },
+                "alternatives": [
+                    {
+                        "part": "SGM358",
+                        "manufacturer": "圣邦微",
+                        "similarity": "98%",
+                        "price_advantage": "-30%",
+                        "notes": "直接替代，性能相同，引脚兼容",
+                        "pros": ["价格优势明显", "性能相同", "完全兼容"],
+                        "cons": ["品牌知名度较低"]
+                    }
+                ]
+            }
+        };
+        
+        // 测试函数
+        function testComponent(partNumber) {
+            document.getElementById('searchInput').value = partNumber;
+            searchComponent();
+        }
+        
+        // 搜索函数
+        function searchComponent() {
+            const partNumber = document.getElementById('searchInput').value.trim().toUpperCase();
+            if (!partNumber) return;
+            
+            // 显示加载中
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('noResult').style.display = 'none';
+            
+            // 模拟API调用延迟
+            setTimeout(() => {
+                const data = componentData[partNumber];
+                
+                if (!data) {
+                    showNoResult();
+                    return;
+                }
+                
+                displayResult(data);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('resultSection').style.display = 'block';
+                
+            }, 500);
+        }
+        
+        // 显示结果
+        function displayResult(data) {
+            // 基本信息
+            document.getElementById('partNumber').textContent = data.part_number;
+            document.getElementById('manufacturer').textContent = data.manufacturer;
+            document.getElementById('category').textContent = data.category;
+            document.getElementById('description').textContent = data.description;
+            
+            // 功能1：价格对比
+            const prices = data.prices;
+            if (prices && prices.length > 0) {
+                const priceValues = prices.map(p => p.price);
+                const minPrice = Math.min(...priceValues);
+                const maxPrice = Math.max(...priceValues);
+                const avgPrice = (priceValues.reduce((a, b) => a + b, 0) / priceValues.length).toFixed(2);
+                
+                document.getElementById('minPrice').textContent = `¥${minPrice.toFixed(2)}`;
+                document.getElementById('maxPrice').textContent = `¥${maxPrice.toFixed(2)}`;
+                document.getElementById('avgPrice').textContent = `¥${avgPrice}`;
+                document.getElementById('platformCount').textContent = `${prices.length}个`;
+                
+                // 价格表格
+                const priceTable = document.getElementById('priceTable');
+                priceTable.innerHTML = '';
+                prices.forEach(price => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${price.platform}</strong></td>
+                        <td><span class="badge bg-success">¥${price.price.toFixed(2)}</span></td>
+                        <td>${price.stock.toLocaleString()}</td>
+                        <td>${price.moq}</td>
+                        <td>${price.lead_time}</td>
+                    `;
+                    priceTable.appendChild(row);
+                });
+            }
+            
+            // 功能2：技术参数
+            const paramsContainer = document.getElementById('parametersContainer');
+            paramsContainer.innerHTML = '';
+            
+            if (data.parameters) {
+                for (const [category, params] of Object.entries(data.parameters)) {
+                    const card = document.createElement('div');
+                    card.className = 'mb-4';
+                    card.innerHTML = `
+                        <h6 class="text-primary mb-3">${category}</h6>
+                        <div class="param-table">
+                            <div class="row">
+                                ${params.map(param => `
+                                    <div class="col-md-6 col-lg-4 mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>${param.name}:</strong>
+                                            <span>${param.value} ${param.unit || ''}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    paramsContainer.appendChild(card);
+                }
+            }
+            
+            // 功能3：国产替代
+            const altsContainer = document.getElementById('alternativesContainer');
+            altsContainer.innerHTML = '';
+            
+            if (data.alternatives && data.alternatives.length > 0) {
+                data.alternatives.forEach(alt => {
+                    const card = document.createElement('div');
+                    card.className = 'alternative-card';
+                    card.innerHTML = `
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="mb-2">
+                                    <i class="bi bi-arrow-right-circle text-success"></i>
+                                    ${alt.part}
+                                </h5>
+                                <p class="text-muted mb-2">${alt.manufacturer}</p>
+                                
+                                <div class="d-flex flex-wrap gap-2 mb-2">
+                                    <span class="badge bg-info">相似度: ${alt.similarity}</span>
+                                    <span class="badge bg-success">便宜 ${alt.price_advantage}</span>
+                                </div>
+                                
+                                <p class="mb-2">${alt.notes}</p>
+                                
+                                ${alt.pros ? `
+                                    <div class="mt-2">
+                                        <small><strong>优点：</strong> ${alt.pros.join('、')}</small>
+                                    </div>
+                                ` : ''}
+                                
+                                ${alt.cons ? `
+                                    <div class="mt-1">
+                                        <small><strong>注意：</strong> ${alt.cons.join('、')}</small>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <button class="btn btn-outline-primary" onclick="testComponent('${alt.part}')">
+                                    <i class="bi bi-search"></i> 查看详情
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    altsContainer.appendChild(card);
+                });
+            } else {
+                altsContainer.innerHTML = '<p class="text-muted">暂无国产替代方案</p>';
+            }
+            
+            // 功能4：智能选型建议
+            const selectionScore = document.getElementById('selectionScore');
+            const selectionAdvice = document.getElementById('selectionAdvice');
+            const prosList = document.getElementById('prosList');
+            const consList = document.getElementById('consList');
+            
+            // 根据数据计算评分
+            let score = 85; // 基础分
+            
+            if (prices && prices.length >= 3) score += 5;
+            if (data.alternatives && data.alternatives.length > 0) score += 5;
+            if (data.parameters && Object.keys(data.parameters).length >= 2) score += 5;
+            
+            score = Math.min(score, 100);
+            
+            selectionScore.style.width = `${score}%`;
+            selectionScore.textContent = `${score}%`;
+            
+            if (score >= 90) {
+                selectionAdvice.textContent = "强烈推荐：该元器件价格竞争力强，技术参数优秀，国产替代方案丰富";
+            } else if (score >= 80) {
+                selectionAdvice.textContent = "推荐使用：该元器件性价比较高，适合大多数应用场景";
+            } else {
+                selectionAdvice.textContent = "一般推荐：建议根据具体需求评估使用";
+            }
+            
+            // 优点列表
+            prosList.innerHTML = '';
+            const pros = [
+                "价格竞争力强",
+                "技术参数优秀",
+                "国产替代方案丰富",
+                "供货稳定",
+                "应用广泛"
+            ];
+            
+            pros.forEach(pro => {
+                const li = document.createElement('li');
+                li.textContent = pro;
+                prosList.appendChild(li);
+            });
+            
+            // 注意事项
+            consList.innerHTML = '';
+            const cons = [
+                "注意交期时间",
+                "确认库存情况",
+                "验证参数兼容性",
+                "考虑长期供货",
+                "评估技术支持"
+            ];
+            
+            cons.forEach(con => {
+                const li = document.createElement('li');
+                li.textContent = con;
+                consList.appendChild(li);
+            });
+        }
+        
+        function showNoResult() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('noResult').style.display = 'block';
+        }
+        
+        // 事件监听
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchComponent();
+        });
+        
+        // 页面加载时显示一些信息
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('完整功能版本已加载');
+            console.log('包含四大功能：价格对比、技术参数、国产替代、智能选型');
+            
+            // 自动搜索示例型号
+            setTimeout(() => {
+                testComponent('STM32F103C8T6');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
